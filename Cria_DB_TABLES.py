@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 
-DB_NAME = 'datasus'
+DB_NAME = 'DATASUS'
 TABLES = {}
 TABLES['RDPR'] = (
 "  CREATE TABLE `RDPR` ("
@@ -224,7 +224,6 @@ TABLES['PAPR'] = (
 " `PA_INE` varchar(10) NOT NULL,"
 " `PA_NAT_JUR` varchar(4) NOT NULL"
 ")")
-
 
 
 config = {'user':'root','password':'root','host':'127.0.0.1','port':'3306','raise_on_warnings':True}
