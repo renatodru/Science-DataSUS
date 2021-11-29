@@ -40,8 +40,7 @@ def abre_dbf(subpasta,dbf_alvo):#devolve o arquivo como um objeto table do dbf
 #    placenames.open()#metodo que abre a tabela
 #    print(placenames)#imprime o cabeçalho e informações gerais do banco
 #    print(placenames[0])#imprime a primeira linha
-
-print(type(abre_dbf("PAPR","RDPR2101.dbf")[0])) #chama a função e imprime a primeira linha
+#print(abre_dbf("RDPR","RDPR2101.dbf")) #chama a função e imprime a primeira linha
 #print(abre_dbf()[0][0])#imprime a primeira coluna da primeira linha
 
 def escreve_bd(cnx,dict_alvos):
@@ -50,28 +49,32 @@ def escreve_bd(cnx,dict_alvos):
     database = 'DATASUS'
     cursor.execute("USE {}".format(database))
     contador = 0
-    
+
     for pasta in dict_alvos:
         table = pasta
         for arq in dict_alvos[pasta]:
             dbf_file = abre_dbf(pasta,arq)
-            for linha_dbf in dbf_file:
-                contador += 1
-                if contador == 10: return True
-                
-                pass
-            
-            
+            #print(dbf_file)
+            #print(tuple(dbf_file.field_names),'\n\n')
+            #print(tuple(dbf_file[0]))
+            #cursor.fast_execute = True
+            qnt_values = len(tuple(dbf_file.field_names))
+            data = [tuple(row) for row in dbf_file]
+            stmt = "INSERT INTO "+pasta+" "+ str(tuple(dbf_file.field_names)).replace("'", "") +" VALUES ("+"%s, "*(qnt_values-1) +"%s)"
+            #print(data,"\n\n")
+            #print(stmt)
+            cursor.executemany(stmt, data)
+            #cursor.executemany("INSERT INTO {0} {1} VALUES ({2})".format(table, tuple(dbf_file.field_names),dbf_file))#,multi=True)
+            cnx.commit()
     cursor.close()
-            
 
+lista_alv = {"RDPR":["RDPR2101.dbf"]}            
+escreve_bd(conecta_db(),lista_alv)
 
 #    for linha in abre_dbf():#chama a tabela linha a linha
 #        query = """INSERT mytb SET column1 = %s, column2 = %s, column3 = %s"""
 #        values = (linha["column1"], linha["column2"], linha["column3"])
 #        cur.execute(query, (linha["column1"], linha["column2"], linha["column3"]))
 #        print(linha["column1"], linha["column2"], linha["column3"])
-    
-#escreve_bd(conecta_db(),lista_alvos())
 
 #cnx.close()
