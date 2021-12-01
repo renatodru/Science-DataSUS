@@ -45,42 +45,35 @@ def abre_dbf(subpasta,dbf_alvo):#devolve o arquivo como um objeto table do dbf
 
 def escreve_bd(cnx,dict_alvos):
     try:cursor = cnx.cursor()
-    except:print("erro definindo cursor")
+    except:print("Erro definindo cursor")
     database = 'DATASUS'
     cursor.execute("USE {}".format(database))
-    contador = 0
+    print("Alvos para importação {}".format(dict_alvos))
 
     for pasta in dict_alvos:
         table = pasta
         for arq in dict_alvos[pasta]:
             dbf_file = abre_dbf(pasta,arq)
-            print("{} carregado".format(arq))
+            print("{} carregado".format(arq), end='')
             #cursor.fast_execute = True
             qnt_values = len(tuple(dbf_file.field_names))
-            print("Cabeçalho de {} carregado".format(arq))
+            print("Cabeçalho de {} carregado".format(arq), end='')
             cursor.execute('SET GLOBAL max_allowed_packet=500*1024*1024')
             cursor.execute('SET GLOBAL wait_timeout = 28800')
             
             data = [tuple(row) for row in dbf_file]
-            print("Linhas de {} carregado".format(arq))
+            print("Linhas de {} carregado".format(arq), end='')
             stmt = "INSERT INTO {} {} VALUES ({} {})".format(pasta, str(tuple(dbf_file.field_names)).replace("'", ""), "%s, "*(qnt_values-1), "%s" )
-            print("Query montada")
+            print("Query montada", end='')
             cursor.executemany(stmt, data)
-            print("Query executada")
+            print("Query executada", end='')
             cnx.commit()
             print("Commit executado")
     cursor.close()
+    cnx.close()
 
 
-lista_alvos()
+print(lista_alvos())
 
-#lista_alv = {"RDPR":["RDPR2102.dbf"]}            
+#lista_alv = {"RDPR":["RDPR2102.dbf"]} #dbf para teste
 escreve_bd(conecta_db(),lista_alvos())
-
-#    for linha in abre_dbf():#chama a tabela linha a linha
-#        query = """INSERT mytb SET column1 = %s, column2 = %s, column3 = %s"""
-#        values = (linha["column1"], linha["column2"], linha["column3"])
-#        cur.execute(query, (linha["column1"], linha["column2"], linha["column3"]))
-#        print(linha["column1"], linha["column2"], linha["column3"])
-
-#cnx.close()
