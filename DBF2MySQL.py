@@ -54,23 +54,35 @@ def escreve_bd(cnx,dict_alvos):
         table = pasta
         for arq in dict_alvos[pasta]:
             dbf_file = abre_dbf(pasta,arq)
-            print("{} carregado".format(arq), end='')
+            print("{} carregado -".format(arq), end='')
             #cursor.fast_execute = True
             qnt_values = len(tuple(dbf_file.field_names))
-            print("Cabeçalho de {} carregado".format(arq), end='')
+            print("Cabeçalho carregado -", end='')
             cursor.execute('SET GLOBAL max_allowed_packet=500*1024*1024')
             cursor.execute('SET GLOBAL wait_timeout = 28800')
             
             data = [tuple(row) for row in dbf_file]
-            print("Linhas de {} carregado".format(arq), end='')
+            print("Linhas carregadas -", end='')
             stmt = "INSERT INTO {} {} VALUES ({} {})".format(pasta, str(tuple(dbf_file.field_names)).replace("'", ""), "%s, "*(qnt_values-1), "%s" )
-            print("Query montada", end='')
+            print("Query montada -", end='')
             cursor.executemany(stmt, data)
-            print("Query executada", end='')
-            cnx.commit()
-            print("Commit executado")
+            print("Query executada -", end='')
+            try:cnx.commit()
+            except:print("Erro no commit de {}".format(arq))
+            else:
+                print("Commit executado - ",end='')
+                try:salva_h(arq)
+                except:print("Erro salvando {} no historico de importação".format(arq))
+                else:print("Salvo no Historico de importação.")
+                
     cursor.close()
     cnx.close()
+
+def salva_h(y):
+    arquivo = open(os.path.dirname(__file__)+"\\DBF_importados_MySQL.txt","a")
+    arquivo.write(str(y)+'\n')
+    arquivo.close()
+
 
 
 print(lista_alvos())
