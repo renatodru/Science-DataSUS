@@ -5,7 +5,7 @@ from os import listdir
 from dbf import Table
 
 def conecta_db():
-    config = {'user':'root','password':'root','host':'127.0.0.1','port':'3306','raise_on_warnings':True}
+    config = {'user':'root','password':'root','host':'localhost','port':'3306','raise_on_warnings':True}
     try:cnx = mysql.connector.connect(**config)#user='root',password='root',host='127.0.0.1',port='3306',raise_on_warnings=True
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:print("Senha ou usuario incorretos")
@@ -54,22 +54,28 @@ def escreve_bd(cnx,dict_alvos):
         table = pasta
         for arq in dict_alvos[pasta]:
             dbf_file = abre_dbf(pasta,arq)
-            #print(dbf_file)
-            #print(tuple(dbf_file.field_names),'\n\n')
-            #print(tuple(dbf_file[0]))
+            print("{} carregado".format(arq))
             #cursor.fast_execute = True
             qnt_values = len(tuple(dbf_file.field_names))
+            print("Cabeçalho de {} carregado".format(arq))
+            cursor.execute('SET GLOBAL max_allowed_packet=500*1024*1024')
+            cursor.execute('SET GLOBAL wait_timeout = 28800')
+            
             data = [tuple(row) for row in dbf_file]
-            stmt = "INSERT INTO "+pasta+" "+ str(tuple(dbf_file.field_names)).replace("'", "") +" VALUES ("+"%s, "*(qnt_values-1) +"%s)"
-            #print(data,"\n\n")
-            #print(stmt)
+            print("Linhas de {} carregado".format(arq))
+            stmt = "INSERT INTO {} {} VALUES ({} {})".format(pasta, str(tuple(dbf_file.field_names)).replace("'", ""), "%s, "*(qnt_values-1), "%s" )
+            print("Query montada")
             cursor.executemany(stmt, data)
-            #cursor.executemany("INSERT INTO {0} {1} VALUES ({2})".format(table, tuple(dbf_file.field_names),dbf_file))#,multi=True)
+            print("Query executada")
             cnx.commit()
+            print("Commit executado")
     cursor.close()
 
-lista_alv = {"RDPR":["RDPR2101.dbf"]}            
-escreve_bd(conecta_db(),lista_alv)
+
+lista_alvos()
+
+#lista_alv = {"RDPR":["RDPR2102.dbf"]}            
+escreve_bd(conecta_db(),lista_alvos())
 
 #    for linha in abre_dbf():#chama a tabela linha a linha
 #        query = """INSERT mytb SET column1 = %s, column2 = %s, column3 = %s"""

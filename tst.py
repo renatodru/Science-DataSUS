@@ -32,20 +32,27 @@ def escreve_bd(cnx,dict_alvos):
 
     for pasta in dict_alvos:
         table = pasta
-        for arq in dict_alvos[pasta]:
+        for arq in dict_alvos[pasta]:            
             dbf_file = abre_dbf(pasta,arq)
-            #print(dbf_file)
-            #print(tuple(dbf_file.field_names),'\n\n')
-            #print(tuple(dbf_file[0]))
-            #cursor.fast_execute = True
+            
+            print("{} carregado".format(arq))
+            print(len(dbf_file))
+            cursor.fast_execute = True
             qnt_values = len(tuple(dbf_file.field_names))
+            print("Cabeçalho de {} carregado".format(arq))
             data = [tuple(row) for row in dbf_file]
-            stmt = "INSERT INTO "+pasta+" "+ str(tuple(dbf_file.field_names)).replace("'", "") +" VALUES ("+"%s, "*(qnt_values-1) +"%s)"
-            #print(data,"\n\n")
-            #print(stmt)
-            cursor.executemany(stmt, data)
-            #cursor.executemany("INSERT INTO {0} {1} VALUES ({2})".format(table, tuple(dbf_file.field_names),dbf_file))#,multi=True)
-            cnx.commit()
+            print("Linhas de {} carregado".format(arq))
+            inicio = 0
+            for fim in range(0,len(data),2000):
+            
+               #stmt = "INSERT INTO "+pasta+" "+ str(tuple(dbf_file.field_names)).replace("'", "") +" VALUES ("+"%s, "*(qnt_values-1) +"%s)"
+                stmt = "INSERT INTO {} {} VALUES ({} {})".format(pasta, str(tuple(dbf_file.field_names)).replace("'", ""), "%s, "*(qnt_values-1), "%s" )
+                print("Query montada",end = '')
+                cursor.executemany(stmt, data[inicio:fim])#,multi=True)
+                inicio = fim
+                print("Query executada",end = '')
+                cnx.commit()
+                print("Commit executado")
     cursor.close()
 
 def sql_insert(table_name, fields, rows, truncate_table = True):
