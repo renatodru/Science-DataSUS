@@ -14,9 +14,9 @@ def conecta_db():
     else:print("Conectado em {}:{}, usuario: {}".format(config['host'],config['port'],config['user']))
     return cnx
 
-def lista_alvos():
+def lista_alvos(pasta_alvo):
     dict_pasta_arquivo = {}
-    pasta_atual = os.path.dirname(__file__)+"\\"
+    pasta_atual = os.path.dirname(__file__)+"\\{}\\".format(pasta_alvo)
     subpastas_nome = [f.name for f in os.scandir(pasta_atual) if f.is_dir()]
     
     for subpasta in subpastas_nome:
@@ -28,17 +28,17 @@ def lista_alvos():
     for x in dict_pasta_arquivo:
         for h in historico:
             if h in dict_pasta_arquivo[x]:dict_pasta_arquivo[x].remove(h)
-        if(len(dict_pasta_arquivo[x])==0):excluir.append(x)    
+        if(len(dict_pasta_arquivo[x])==0):excluir.append(x)
     if(len(excluir)>0):
         for exc in excluir: del dict_pasta_arquivo[exc]    
     return dict_pasta_arquivo
 
-def abre_dbf(subpasta,dbf_alvo):#devolve o arquivo como um objeto table do dbf
-    localatual = os.path.dirname(__file__)+str('\\')
+def abre_dbf(subpasta,dbf_alvo,pasta_alvo):#devolve o arquivo como um objeto table do dbf
+    localatual = os.path.dirname(__file__)+'\\{}\\'.format(pasta_alvo)
     dbf_file = localatual+subpasta+"\\"+dbf_alvo
     return Table(dbf_file).open() #atribui o DBF à variavel, a abre e retorna como chamado da função
 
-def escreve_bd(cnx,dict_alvos):
+def escreve_bd(cnx,dict_alvos,pasta_alvo):
     try:cursor = cnx.cursor()
     except:print("Erro definindo cursor")
     database = 'DATASUS'
@@ -48,7 +48,7 @@ def escreve_bd(cnx,dict_alvos):
     for pasta in dict_alvos:
         table = pasta
         for arq in dict_alvos[pasta]:
-            dbf_file = abre_dbf(pasta,arq)
+            dbf_file = abre_dbf(pasta,arq,pasta_alvo)
             print("{} carregado -".format(arq), end='')
             #cursor.fast_execute = True
             qnt_values = len(tuple(dbf_file.field_names))
@@ -78,9 +78,10 @@ def salva_h(y):
     arquivo.write(str(y)+'\n')
     arquivo.close()
 
-
-
-print(lista_alvos())
+#print(lista_alvos("DADOS"))
 
 #lista_alv = {"RDPR":["RDPR2102.dbf"]} #dbf para teste
-#escreve_bd(conecta_db(),lista_alvos())
+
+pasta_alvo="DADOS"
+
+escreve_bd(conecta_db(),lista_alvos(pasta_alvo),pasta_alvo)

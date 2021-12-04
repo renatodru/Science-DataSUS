@@ -1,6 +1,6 @@
 *.dbf
 *.dbc
-gitignore
+.gitignore
 */TAB*/
 TAB*.zip
 tst.py
