@@ -1,8 +1,7 @@
 *.dbf
 *.dbc
-.gitignore
-DADOS/TAB_SIA/*
-DADOS/TAB_SIH/*
-DADOS/TAB415/*
+gitignore
+*/TAB*/
+TAB*.zip
 tst.py
 tst2.py
