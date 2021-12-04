@@ -1,4 +1,4 @@
-#procura os arquivos DBC em uma subpasta e os converte para DBF
+#procura subpastas da pasta_alvo que tenha arquivos DBC e os converte para DBF, desde que a pasta_alvo seja uma subpasta do diretorio deste script
 import os
 from os import listdir
 
