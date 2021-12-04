@@ -1,91 +1,30 @@
-import mysql.connector
-from mysql.connector import errorcode
 import os
 from os import listdir
-from dbf import Table
 
-config = {'user':'root','password':'root','host':'127.0.0.1','port':'3306','raise_on_warnings':True}
-try:cnx = mysql.connector.connect(**config)#user='root',password='root',host='127.0.0.1',port='3306',raise_on_warnings=True
-except mysql.connector.Error as err:
-    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:print("Senha ou usuario incorretos")
-    elif err.errno == errorcode.ER_BAD_DB_ERROR:print("Database não existe")
-    else:print(err)
-else:print("Conectado em {}:{}, usuario: {}".format(config['host'],config['port'],config['user']))
+def lista_alvos(pasta_alvo,formato):#retorna dict {subpasta:[arquivos]}
+    dict_pasta_arquivo = {}
+    caminho = os.path.dirname(__file__)+"\\{}\\".format(pasta_alvo)#path deste script python + pasta dados
+    subpastas_nome = [f.name for f in os.scandir(caminho) if f.is_dir()]
+    for subpasta in subpastas_nome:
+        lista_arq = [arq for arq in listdir(caminho+subpasta) if arq[-3:]==formato]
+        if len(lista_arq)>0:dict_pasta_arquivo.update({subpasta:lista_arq})
+    return dict_pasta_arquivo
 
+def dbc2dbf(arquivos_alvo,pasta_alvo):
+    local_atual = os.path.dirname(__file__)+"\\"
+    if "blast-dbf.exe" not in listdir(local_atual):print("blast-dbf.exe não está na pasta atual");return
+    caminho = local_atual+"{}\\".format(pasta_alvo)
 
-def abre_dbf(subpasta,dbf_alvo):#devolve o arquivo como um objeto table do dbf
-    localatual = os.path.dirname(__file__)+str('\\')
-    dbf_file = localatual+subpasta+"\\"+dbf_alvo
-    return Table(dbf_file).open() #atribui o DBF à variavel, a abre e retorna como chamado da função
-#    placenames.open()#metodo que abre a tabela
-#    print(placenames)#imprime o cabeçalho e informações gerais do banco
-#    print(placenames[0])#imprime a primeira linha
-#print(abre_dbf("RDPR","RDPR2101.dbf")) #chama a função e imprime a primeira linha
-#print(abre_dbf()[0][0])#imprime a primeira coluna da primeira linha
+    for subpasta in arquivos_alvo:
+        for arquivo in arquivos_alvo[subpasta]:
+            input_file = os.path.join(caminho, subpasta, arquivo)
+            output_file = input_file.replace('.dbc', '.dbf')
+            #if arquivo.replace('.dbc', '.dbf') in listdir(os.path.join(caminho, subpasta)):print("{} já existe".format(output_file));continue#pula para o proximo arquivo
+            try:os.system("{}blast-dbf.exe {} {}".format(local_atual,input_file,output_file))
+            except: print("Arquivo {} não convertido. Erro {}".format(arquivo,sys.exc_info()))
+            else:print("Arquivo {} convertido".format(arquivo))
+                    
+pasta_alvo = "DADOS"
+dbc = "dbc"
 
-def escreve_bd(cnx,dict_alvos):
-    try:cursor = cnx.cursor()
-    except:print("erro definindo cursor")
-    database = 'DATASUS'
-    cursor.execute("USE {}".format(database))
-    contador = 0
-
-    for pasta in dict_alvos:
-        table = pasta
-        for arq in dict_alvos[pasta]:            
-            dbf_file = abre_dbf(pasta,arq)
-            
-            print("{} carregado".format(arq))
-            print(len(dbf_file))
-            cursor.fast_execute = True
-            qnt_values = len(tuple(dbf_file.field_names))
-            print("Cabeçalho de {} carregado".format(arq))
-            data = [tuple(row) for row in dbf_file]
-            print("Linhas de {} carregado".format(arq))
-            inicio = 0
-            for fim in range(0,len(data),2000):
-            
-               #stmt = "INSERT INTO "+pasta+" "+ str(tuple(dbf_file.field_names)).replace("'", "") +" VALUES ("+"%s, "*(qnt_values-1) +"%s)"
-                stmt = "INSERT INTO {} {} VALUES ({} {})".format(pasta, str(tuple(dbf_file.field_names)).replace("'", ""), "%s, "*(qnt_values-1), "%s" )
-                print("Query montada",end = '')
-                cursor.executemany(stmt, data[inicio:fim])#,multi=True)
-                inicio = fim
-                print("Query executada",end = '')
-                cnx.commit()
-                print("Commit executado")
-    cursor.close()
-
-def sql_insert(table_name, fields, rows, truncate_table = True):
-    if len(rows) == 0:return
-
-    cursor = mdwh_connection.cursor()
-    cursor.fast_executemany = True
-    values_sql = ('?, ' * (fields.count(',') + 1))[:-2]
-
-    if truncate_table: sql_truncate(table_name, cursor)    
-    insert_sql = 'insert {0} ({1}) values ({2});'.format(table_name, fields, values_sql)
-    current_row = 0
-    batch_size = 50000
-
-    while current_row < len(rows):
-        cursor.executemany(insert_sql, rows[current_row:current_row + batch_size])
-        mdwh_connection.commit()
-        current_row += batch_size
-        logging.info(
-            '{} more records inserted. Total: {}'.format(
-                min(batch_size,len(rows)-current_row+batch_size),
-                min(current_row, len(rows))
-            )
-        )   
-
-
-
-lista_alv = {"RDPR":["RDPR2101.dbf"]}            
-escreve_bd(cnx,lista_alv)
-
-#for linha in abre_dbf():#chama a tabela linha a linha
-#    query = """INSERT mytb SET column1 = %s, column2 = %s, column3 = %s"""
-#    values = (linha["column1"], linha["column2"], linha["column3"])
-#    print(linha["column1"], linha["column2"], linha["column3"])
-
-#cnx.close()
+dbc2dbf(lista_alvos(pasta_alvo,dbc),pasta_alvo)

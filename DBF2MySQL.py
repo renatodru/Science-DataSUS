@@ -37,11 +37,6 @@ def abre_dbf(subpasta,dbf_alvo):#devolve o arquivo como um objeto table do dbf
     localatual = os.path.dirname(__file__)+str('\\')
     dbf_file = localatual+subpasta+"\\"+dbf_alvo
     return Table(dbf_file).open() #atribui o DBF à variavel, a abre e retorna como chamado da função
-#    placenames.open()#metodo que abre a tabela
-#    print(placenames)#imprime o cabeçalho e informações gerais do banco
-#    print(placenames[0])#imprime a primeira linha
-#print(abre_dbf("RDPR","RDPR2101.dbf")) #chama a função e imprime a primeira linha
-#print(abre_dbf()[0][0])#imprime a primeira coluna da primeira linha
 
 def escreve_bd(cnx,dict_alvos):
     try:cursor = cnx.cursor()
@@ -88,4 +83,4 @@ def salva_h(y):
 print(lista_alvos())
 
 #lista_alv = {"RDPR":["RDPR2102.dbf"]} #dbf para teste
-escreve_bd(conecta_db(),lista_alvos())
+#escreve_bd(conecta_db(),lista_alvos())
