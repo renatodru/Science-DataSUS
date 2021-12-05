@@ -1,11 +1,18 @@
 import mysql.connector
 from mysql.connector import errorcode
+
+
 import os
 from os import listdir
 import sqlalchemy
 import time #para medir o tempo do algoritmo
 
 def conecta_db():
+    #https://docs.sqlalchemy.org/en/14/dialects/mysql.html#module-sqlalchemy.dialects.mysql.mysqlconnector
+    #mysql+mysqldb://<user>:<password>@<host>[:<port>]/<dbname>
+    
+    
+    
     pass
 
 def lista_alvos(pasta_alvo):

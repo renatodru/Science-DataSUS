@@ -65,7 +65,7 @@ def escreve_bd(cnx,dict_alvos,pasta_alvo):
             for i in range(0, linhas, passo):
                 try:cursor.executemany(stmt, dbf_file[i:i + passo])
                 except mysql.connector.Error as err:print(err);cursor.close();cnx.close();return
-                else:print("Query executada, Tempo: {}, realizado: %".format(time.time()-inicio,100*(i+passo)/linhas))
+                else:print("Query executada, Tempo: {}, realizado: %{}".format(time.time()-inicio,100*(i+passo)/linhas))
                         
             try:cnx.commit()
             except mysql.connector.Error as err:print(err);return
@@ -86,8 +86,8 @@ def salva_h(y):
 
 print(lista_alvos("DADOS"))
 
-lista_alv = {"PAPR":["PAPR2101.dbf"]}#,"SPPR2102.dbf","SPPR2103.dbf","SPPR2104.dbf","SPPR2105.dbf","SPPR2106.dbf","SPPR2107.dbf","SPPR2108.dbf","SPPR2109.dbf"]} #dbf para teste
+#lista_alv = {"PAPR":["PAPR2101.dbf"]}#,"SPPR2102.dbf","SPPR2103.dbf","SPPR2104.dbf","SPPR2105.dbf","SPPR2106.dbf","SPPR2107.dbf","SPPR2108.dbf","SPPR2109.dbf"]} #dbf para teste
 pasta_alvo="DADOS"
-escreve_bd(conecta_db(),lista_alv,pasta_alvo)
+#escreve_bd(conecta_db(),lista_alv,pasta_alvo)
 
-#escreve_bd(conecta_db(),lista_alvos(pasta_alvo),pasta_alvo)
+escreve_bd(conecta_db(),lista_alvos(pasta_alvo),pasta_alvo)
