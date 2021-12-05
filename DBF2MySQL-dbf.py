@@ -49,28 +49,31 @@ def escreve_bd(cnx,dict_alvos,pasta_alvo):
     #print("Alvos para importação {}".format(dict_alvos))
     cursor.execute('SET GLOBAL max_allowed_packet=500*1024*1024')
     cursor.execute('SET GLOBAL wait_timeout = 28800')
-    cursor.execute("DELETE FROM SPPR")
+    #cursor.execute("DELETE FROM PAPR")
     cursor.fast_execute = True
     cnx.commit()
     for pasta in dict_alvos:
         table = pasta
         for arq in dict_alvos[pasta]:
-            dbf_file = abre_dbf(pasta,arq,pasta_alvo)
-            print("{} aberto:(Linhas:{} x Colunas: {})".format(arq, len(dbf_file), dbf_file.field_count))
-            stmt = "INSERT INTO {} {} VALUES ({} {})".format(pasta, str(tuple(dbf_file.field_names)).replace("'", ""), "%s, "*(dbf_file.field_count-1), "%s" )
             inicio = time.time()
-            try:cursor.executemany(stmt, dbf_file);print("Tempo: ",time.time()-inicio)
-            except mysql.connector.Error as err:print(err);cursor.close();cnx.close();return
-            else:print("Query executada")
-
-            
+            dbf_file = abre_dbf(pasta,arq,pasta_alvo)
+            linhas,colunas = len(dbf_file),dbf_file.field_count
+            print("{} aberto:(Linhas:{} x Colunas: {}), tempo load: {}".format(arq, linhas, colunas,time.time()-inicio))
+            stmt = "INSERT INTO {} {} VALUES ({}{})".format(pasta, str(tuple(dbf_file.field_names)).replace("'", ""), "%s, "*(dbf_file.field_count-1), "%s" )
+            inicio = time.time()
+            passo = 50000
+            for i in range(0, linhas, passo):
+                try:cursor.executemany(stmt, dbf_file[i:i + passo])
+                except mysql.connector.Error as err:print(err);cursor.close();cnx.close();return
+                else:print("Query executada, Tempo: {}, realizado: %".format(time.time()-inicio,100*(i+passo)/linhas))
+                        
             try:cnx.commit()
             except mysql.connector.Error as err:print(err);return
             else:
-                #print("Commit executado")
+                print("Commit executado",end ='')
                 try:salva_h(arq)
                 except:print("Erro salvando {} no historico de importação".format(arq));cursor.close();cnx.close()
-                #else:print("Salvo no Historico de importação.")
+                else:print("Salvo no Historico de importação.")
 
                 
     cursor.close()
@@ -81,9 +84,9 @@ def salva_h(y):
     arquivo.write(str(y)+'\n')
     arquivo.close()
 
-#print(lista_alvos("DADOS"))
+print(lista_alvos("DADOS"))
 
-lista_alv = {"SPPR":["SPPR2101.dbf","SPPR2102.dbf","SPPR2103.dbf","SPPR2104.dbf","SPPR2105.dbf","SPPR2106.dbf","SPPR2107.dbf","SPPR2108.dbf","SPPR2109.dbf"]} #dbf para teste
+lista_alv = {"PAPR":["PAPR2101.dbf"]}#,"SPPR2102.dbf","SPPR2103.dbf","SPPR2104.dbf","SPPR2105.dbf","SPPR2106.dbf","SPPR2107.dbf","SPPR2108.dbf","SPPR2109.dbf"]} #dbf para teste
 pasta_alvo="DADOS"
 escreve_bd(conecta_db(),lista_alv,pasta_alvo)
 

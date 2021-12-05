@@ -46,13 +46,12 @@ def escreve_bd(cnx,dict_alvos,pasta_alvo):
     database = 'DATASUS'
     cursor.execute("USE {}".format(database))
     #print("Alvos para importação {}".format(dict_alvos))
-    cursor.execute('SET GLOBAL max_allowed_packet=1*1024*1024*1024')
+    cursor.execute('SET GLOBAL max_allowed_packet=1024*1024*1024')
     cursor.execute('SET GLOBAL wait_timeout = 28800')
-    cursor.execute("DELETE FROM SPPR")
+    #cursor.execute("DELETE FROM PAPR")
     cursor.fast_execute = True
     cnx.commit()
     for pasta in dict_alvos:
-        table = pasta
         for arq in dict_alvos[pasta]:
             inicio = time.time()
             dbf_file = abre_dbf(pasta,arq,pasta_alvo)
@@ -64,17 +63,17 @@ def escreve_bd(cnx,dict_alvos,pasta_alvo):
             inicio = time.time()            
             data = [list(dicio.values()) for dicio in dbf_file.records]
             print("Tempo list compreension: ",time.time()-inicio)
-            
-            #[lst[i:i + n] for i in range(0, len(lst), n)]
+            passo = 50000
             inicio = time.time() 
-            try:cursor.executemany(stmt, data);print("Tempo execução: ",time.time()-inicio)
-            except mysql.connector.Error as err:print(err);cursor.close();cnx.close();return
-            else:print("Query executada")
+            for i in range(0, linhas, passo):
+                try:cursor.executemany(stmt, data[i:i + passo])
+                except mysql.connector.Error as err:print(err);cursor.close();cnx.close();return
+            print("Tempo execução: ",time.time()-inicio,end='')
 
             try:cnx.commit()
             except mysql.connector.Error as err:print(err);return
             else:
-                print("Commit executado")
+                print("Commit executado",end='')
                 try:salva_h(arq)
                 except:print("Erro salvando {} no historico de importação".format(arq));cursor.close();cnx.close()
                 else:print("Salvo no Historico de importação.")
@@ -88,10 +87,9 @@ def salva_h(y):
     arquivo.write(str(y)+'\n')
     arquivo.close()
 
-#print(lista_alvos("DADOS"))
 
-lista_alv = {"SPPR":["SPPR2102.dbf"]}#,"SPPR2102.dbf","SPPR2103.dbf","SPPR2104.dbf","SPPR2105.dbf","SPPR2106.dbf","SPPR2107.dbf","SPPR2108.dbf","SPPR2109.dbf"]} #dbf para teste
 pasta_alvo="DADOS"
-escreve_bd(conecta_db(),lista_alv,pasta_alvo)
-
-#escreve_bd(conecta_db(),lista_alvos(pasta_alvo),pasta_alvo)
+#lista_alv = {"SPPR":["SPPR2102.dbf"]}#,"SPPR2102.dbf","SPPR2103.dbf","SPPR2104.dbf","SPPR2105.dbf","SPPR2106.dbf","SPPR2107.dbf","SPPR2108.dbf","SPPR2109.dbf"]} #dbf para teste
+#escreve_bd(conecta_db(),lista_alv,pasta_alvo)
+#print(lista_alvos(pasta_alvo))
+escreve_bd(conecta_db(),lista_alvos(pasta_alvo),pasta_alvo)
