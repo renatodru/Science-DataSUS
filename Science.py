@@ -14,20 +14,23 @@ def conecta_db():
     else:print("Conectado em {}:{}, usuario: {}".format(config['host'],config['port'],config['user']))
     return cnx
 
+def table_mysql(query,cnx):
+    try:cursor = cnx.cursor()
+    except:print("Erro definindo cursor");return
+    
+    database = 'DATASUS'
+    cursor.execute("USE {}".format(database))
+    cursor.execute('SELECT * FROM {}'.format(query))
+
+    return cursor.fetchall()
 
 cnx = conecta_db()
-try:cursor = cnx.cursor()
-except:print("Erro definindo cursor")
-database = 'DATASUS'
-cursor.execute("USE {}".format(database))
-cursor.execute('SELECT * FROM RDPR WHERE CNES = "2384299"')
 
-table_rows = cursor.fetchall()
+df_RDPR = pd.DataFrame(table_mysql("RDPR WHERE CNES = '2384299'",cnx))
+df_SPPR = pd.DataFrame(table_mysql("SPPR WHERE SP_CNES = '2384299'",cnx))
 
-pd.read
 
-df = pd.DataFrame(table_rows)
-print(df)
+
 
 cursor.close()
 cnx.close()
