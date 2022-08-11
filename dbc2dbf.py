@@ -1,5 +1,6 @@
 #procura subpastas da pasta_alvo que tenha arquivos DBC e os converte para DBF, desde que a pasta_alvo seja uma subpasta do diretorio deste script
 import os
+import sys
 from os import listdir
 
 def lista_alvos(pasta_alvo,formato):#retorna dict {subpasta:[arquivos]}
