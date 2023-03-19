@@ -5,3 +5,9 @@
 TAB*.zip
 tst.py
 tst2.py
+volume_pg/
+*.dbc
+*.dbf
+/__pycache__
+*/__pycache__
+/old

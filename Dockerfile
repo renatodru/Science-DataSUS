@@ -1,0 +1,24 @@
+FROM python:3.10.10-alpine3.17
+
+WORKDIR /main
+COPY requirements.txt requirements.txt
+
+RUN apt intall python3-pip wget unzip gcc libpq-dev -y
+RUN wget https://github.com/eaglebh/blast-dbf/archive/refs/heads/master.zip --no-check-certificate
+RUN unzip master.zip
+RUN cc -o blast-dbf-master/blast-dbf.exe blast-dbf-master/blast.c blast-dbf-master/blast-dbf.c
+
+RUN pip3 install -r requirements.txt
+
+COPY . .
+
+ENV APP_PORT=3000
+
+EXPOSE $APP_PORT
+
+CMD ["python3", "app.py" ]
+
+
+
+# Obs: não recomendado para produção
+# mais informações: https://flask.palletsprojects.com/en/2.2.x/deploying/

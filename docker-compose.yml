@@ -1,0 +1,20 @@
+
+version: '3.9'
+
+services:
+  db_postgres:
+    container_name: db_postgres
+    image: postgres:9.4.26-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: qweasd123
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volume_pg:/var/lib/postgresql/data/pgdata
+
+volumes:
+  volume_pg:

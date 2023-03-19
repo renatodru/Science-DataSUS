@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo - Dockerizado</title>
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='./styles/aplicativo.css')}}">
+    
+</head>
+<body>
+    <h1>Aplicativo - Dockerizado</h1>
+    <p>Este é um aplicativo dockerizado</p>
+    <p>Visualizar a produção faturada do SUS no Paraná mês de agosto de 2022</p>
+    
+    <form action="aplicativo" method="post">
+        <p>
+            <label for="complexidade">Complexidade do procedimento: </label>
+            
+            <input type="radio" name="complexidade" id="Média Complexidade" value="02" required>
+            <label for="Média Complexidade">Média Complexidade</label>
+
+            <input type="radio" name="complexidade" id="Alta Complexidade" value="03" required>
+            <label for="Alta Complexidade">Alta Complexidade</label>
+        </p>
+        <p>
+            <label for="financiamento">Financiamento do procedimento: </label>
+            
+            <input type="radio" name="financiamento" id="MAC" value="06" required>
+            <label for="MAC">MAC - Média e Alta Complexidade</label>
+
+            <input type="radio" name="financiamento" id="FAEC" value="04" required>
+            <label for="FAEC">FAEC - Fundo de Ações Estrategicas e Compensações</label>
+        </p>
+        <p>
+            <label for="cidade">Cidade de residência do paciente:</label><br>
+            <select name="cidade" id="cidade" unique required size="10">
+                <optgroup label="01ª Paranaguá">	<option value="410120">ANTONINA - Pop. - 18949</option>	
+                    <option value="410950">GUARAQUECABA - Pop. - 7594</option>	
+                    <option value="410960">GUARATUBA - Pop. - 37527</option>	
+                    <option value="411570">MATINHOS - Pop. - 35219</option>	
+                    <option value="411620">MORRETES - Pop. - 16446</option>	
+                    <option value="411820">PARANAGUA - Pop. - 156174</option>	
+                    <option value="411995">PONTAL DO PARANA - Pop. - 27915</option>	</optgroup>
+                <optgroup label="02ª Curitiba">	<option value="410020">ADRIANOPOLIS - Pop. - 5857</option>	
+                    <option value="410030">AGUDOS DO SUL - Pop. - 9470</option>	
+                    <option value="410040">ALMIRANTE TAMANDARE - Pop. - 120041</option>	
+                    <option value="410180">ARAUCARIA - Pop. - 146214</option>	
+                    <option value="410230">BALSA NOVA - Pop. - 13092</option>	
+                    <option value="410310">BOCAIUVA DO SUL - Pop. - 13129</option>	
+                    <option value="410400">CAMPINA GRANDE DO SUL - Pop. - 43685</option>	
+                    <option value="410410">CAMPO DO TENENTE - Pop. - 8045</option>	
+                    <option value="410420">CAMPO LARGO - Pop. - 133865</option>	
+                    <option value="410425">CAMPO MAGRO - Pop. - 29740</option>	
+                    <option value="410520">CERRO AZUL - Pop. - 17833</option>	
+                    <option value="410580">COLOMBO - Pop. - 246540</option>	
+                    <option value="410620">CONTENDA - Pop. - 18837</option>	
+                    <option value="410690">CURITIBA - Pop. - 1948626</option>	
+                    <option value="412863">DOUTOR ULYSSES - Pop. - 5552</option>	
+                    <option value="410765">FAZENDA RIO GRANDE - Pop. - 102004</option>	
+                    <option value="411125">ITAPERUCU - Pop. - 29070</option>	
+                    <option value="411320">LAPA - Pop. - 48410</option>	
+                    <option value="411430">MANDIRITUBA - Pop. - 27315</option>	
+                    <option value="411910">PIEN - Pop. - 12882</option>	
+                    <option value="411915">PINHAIS - Pop. - 133490</option>	
+                    <option value="411950">PIRAQUARA - Pop. - 114970</option>	
+                    <option value="412080">QUATRO BARRAS - Pop. - 23911</option>	
+                    <option value="412120">QUITANDINHA - Pop. - 19221</option>	
+                    <option value="412220">RIO BRANCO DO SUL - Pop. - 32517</option>	
+                    <option value="412230">RIO NEGRO - Pop. - 34411</option>	
+                    <option value="412550">SAO JOSE DOS PINHAIS - Pop. - 329058</option>	
+                    <option value="412760">TIJUCAS DO SUL - Pop. - 17084</option>	
+                    <option value="412788">TUNAS DO PARANA - Pop. - 9022</option>	</optgroup>
+                <optgroup label="03ª Ponta Grossa">	<option value="410160">ARAPOTI - Pop. - 28300</option>	
+                    <option value="410465">CARAMBEI - Pop. - 23825</option>	
+                    <option value="410490">CASTRO - Pop. - 71809</option>	
+                    <option value="411050">IPIRANGA - Pop. - 15251</option>	
+                    <option value="411140">IVAI - Pop. - 13965</option>	
+                    <option value="411200">JAGUARIAIVA - Pop. - 35027</option>	
+                    <option value="411770">PALMEIRA - Pop. - 33994</option>	
+                    <option value="411940">PIRAI DO SUL - Pop. - 25617</option>	
+                    <option value="411990">PONTA GROSSA - Pop. - 355336</option>	
+                    <option value="412010">PORTO AMAZONAS - Pop. - 4874</option>	
+                    <option value="412510">SAO JOAO DO TRIUNFO - Pop. - 15241</option>	
+                    <option value="412630">SENGES - Pop. - 19385</option>	</optgroup>
+                <optgroup label="04ª Irati">	<option value="410773">FERNANDES PINHEIRO - Pop. - 5602</option>	
+                    <option value="410895">GUAMIRANGA - Pop. - 8811</option>	
+                    <option value="411010">IMBITUVA - Pop. - 32940</option>	
+                    <option value="411020">INACIO MARTINS - Pop. - 11121</option>	
+                    <option value="411070">IRATI - Pop. - 61088</option>	
+                    <option value="411390">MALLET - Pop. - 13663</option>	
+                    <option value="412150">REBOUCAS - Pop. - 14946</option>	
+                    <option value="412200">RIO AZUL - Pop. - 15336</option>	
+                    <option value="412700">TEIXEIRA SOARES - Pop. - 12567</option>	</optgroup>
+                <optgroup label="05ª Guarapuava">	<option value="410304">BOA VENTURA DE SAO ROQUE - Pop. - 6365</option>	
+                    <option value="410395">CAMPINA DO SIMAO - Pop. - 3859</option>	
+                    <option value="410442">CANDOI - Pop. - 16053</option>	
+                    <option value="410445">CANTAGALO - Pop. - 13329</option>	
+                    <option value="410845">FOZ DO JORDAO - Pop. - 4556</option>	
+                    <option value="410865">GOIOXIM - Pop. - 7053</option>	
+                    <option value="410940">GUARAPUAVA - Pop. - 182644</option>	
+                    <option value="411325">LARANJAL - Pop. - 5784</option>	
+                    <option value="411330">LARANJEIRAS DO SUL - Pop. - 32139</option>	
+                    <option value="411545">MARQUINHO - Pop. - 4340</option>	
+                    <option value="411705">NOVA LARANJEIRAS - Pop. - 11507</option>	
+                    <option value="411780">PALMITAL - Pop. - 12960</option>	
+                    <option value="411930">PINHAO - Pop. - 32559</option>	
+                    <option value="411960">PITANGA - Pop. - 29994</option>	
+                    <option value="412015">PORTO BARREIRO - Pop. - 3184</option>	
+                    <option value="412060">PRUDENTOPOLIS - Pop. - 52513</option>	
+                    <option value="412175">RESERVA DO IGUACU - Pop. - 8069</option>	
+                    <option value="412215">RIO BONITO DO IGUACU - Pop. - 13255</option>	
+                    <option value="412796">TURVO - Pop. - 13095</option>	
+                    <option value="412865">VIRMOND - Pop. - 4022</option>	</optgroup>
+                <optgroup label="06ª União da Vitória">	<option value="410130">ANTONIO OLINTO - Pop. - 7427</option>	
+                    <option value="410290">BITURUNA - Pop. - 16400</option>	
+                    <option value="410680">CRUZ MACHADO - Pop. - 18741</option>	
+                    <option value="410850">GENERAL CARNEIRO - Pop. - 13685</option>	
+                    <option value="411860">PAULA FREITAS - Pop. - 5908</option>	
+                    <option value="411870">PAULO FRONTIN - Pop. - 7387</option>	
+                    <option value="412030">PORTO VITORIA - Pop. - 4061</option>	
+                    <option value="412560">SAO MATEUS DO SUL - Pop. - 46705</option>	
+                    <option value="412820">UNIAO DA VITORIA - Pop. - 57913</option>	</optgroup>
+                <optgroup label="07ª Pato Branco">	<option value="410322">BOM SUCESSO DO SUL - Pop. - 3254</option>	
+                    <option value="410540">CHOPINZINHO - Pop. - 19167</option>	
+                    <option value="410570">CLEVELANDIA - Pop. - 16450</option>	
+                    <option value="410645">CORONEL DOMINGOS SOARES - Pop. - 7518</option>	
+                    <option value="410650">CORONEL VIVIDA - Pop. - 20580</option>	
+                    <option value="410965">HONORIO SERPA - Pop. - 5119</option>	
+                    <option value="411120">ITAPEJARA D'OESTE - Pop. - 12094</option>	
+                    <option value="411440">MANGUEIRINHA - Pop. - 16642</option>	
+                    <option value="411530">MARIOPOLIS - Pop. - 6632</option>	
+                    <option value="411760">PALMAS - Pop. - 51755</option>	
+                    <option value="411850">PATO BRANCO - Pop. - 83843</option>	
+                    <option value="412480">SAO JOAO - Pop. - 10181</option>	
+                    <option value="412627">SAUDADE DO IGUACU - Pop. - 5539</option>	
+                    <option value="412665">SULINA - Pop. - 2930</option>	
+                    <option value="412870">VITORINO - Pop. - 6859</option>	</optgroup>
+                <optgroup label="08ª Francisco Beltrão">	<option value="410100">AMPERE - Pop. - 19311</option>	
+                    <option value="410260">BARRACAO - Pop. - 10312</option>	
+                    <option value="410275">BELA VISTA DA CAROBA - Pop. - 3457</option>	
+                    <option value="410302">BOA ESPERANCA DO IGUACU - Pop. - 2470</option>	
+                    <option value="410315">BOM JESUS DO SUL - Pop. - 3506</option>	
+                    <option value="410450">CAPANEMA - Pop. - 19148</option>	
+                    <option value="410657">CRUZEIRO DO IGUACU - Pop. - 4240</option>	
+                    <option value="410720">DOIS VIZINHOS - Pop. - 41038</option>	
+                    <option value="410740">ENEAS MARQUES - Pop. - 5933</option>	
+                    <option value="410785">FLOR DA SERRA DO SUL - Pop. - 4603</option>	
+                    <option value="410840">FRANCISCO BELTRAO - Pop. - 92216</option>	
+                    <option value="411435">MANFRINOPOLIS - Pop. - 2506</option>	
+                    <option value="411540">MARMELEIRO - Pop. - 14387</option>	
+                    <option value="411695">NOVA ESPERANCA DO SUDOESTE - Pop. - 5030</option>	
+                    <option value="411725">NOVA PRATA DO IGUACU - Pop. - 10544</option>	
+                    <option value="411900">PEROLA D'OESTE - Pop. - 6288</option>	
+                    <option value="411925">PINHAL DE SAO BENTO - Pop. - 2737</option>	
+                    <option value="411980">PLANALTO - Pop. - 13431</option>	
+                    <option value="412035">PRANCHITA - Pop. - 5095</option>	
+                    <option value="412140">REALEZA - Pop. - 16950</option>	
+                    <option value="412160">RENASCENCA - Pop. - 6787</option>	
+                    <option value="412280">SALGADO FILHO - Pop. - 3483</option>	
+                    <option value="412300">SALTO DO LONTRA - Pop. - 14872</option>	
+                    <option value="412380">SANTA IZABEL DO OESTE - Pop. - 14794</option>	
+                    <option value="412440">SANTO ANTONIO DO SUDOESTE - Pop. - 20261</option>	
+                    <option value="412520">SAO JORGE D'OESTE - Pop. - 9028</option>	
+                    <option value="412860">VERE - Pop. - 7174</option>	</optgroup>
+                <optgroup label="09ª Foz do Iguaçu">	<option value="410830">FOZ DO IGUACU - Pop. - 258248</option>	
+                    <option value="411095">ITAIPULANDIA - Pop. - 11385</option>	
+                    <option value="411560">MATELANDIA - Pop. - 18107</option>	
+                    <option value="411580">MEDIANEIRA - Pop. - 46574</option>	
+                    <option value="411605">MISSAL - Pop. - 10704</option>	
+                    <option value="412125">RAMILANDIA - Pop. - 4476</option>	
+                    <option value="412405">SANTA TEREZINHA DE ITAIPU - Pop. - 23699</option>	
+                    <option value="412570">SAO MIGUEL DO IGUACU - Pop. - 27576</option>	
+                    <option value="412635">SERRANOPOLIS DO IGUACU - Pop. - 4477</option>	</optgroup>
+                <optgroup label="10ª Cascavel">	<option value="410105">ANAHY - Pop. - 2788</option>	
+                    <option value="410305">BOA VISTA DA APARECIDA - Pop. - 7540</option>	
+                    <option value="410335">BRAGANEY - Pop. - 5382</option>	
+                    <option value="410345">CAFELANDIA - Pop. - 18456</option>	
+                    <option value="410405">CAMPO BONITO - Pop. - 3763</option>	
+                    <option value="410460">CAPITAO LEONIDAS MARQUES - Pop. - 15834</option>	
+                    <option value="410480">CASCAVEL - Pop. - 332333</option>	
+                    <option value="410500">CATANDUVAS - Pop. - 10167</option>	
+                    <option value="410530">CEU AZUL - Pop. - 11819</option>	
+                    <option value="410630">CORBELIA - Pop. - 17117</option>	
+                    <option value="410712">DIAMANTE DO SUL - Pop. - 3424</option>	
+                    <option value="410754">ESPIGAO ALTO DO IGUACU - Pop. - 4048</option>	
+                    <option value="410820">FORMOSA DO OESTE - Pop. - 6460</option>	
+                    <option value="410930">GUARANIACU - Pop. - 12217</option>	
+                    <option value="410975">IBEMA - Pop. - 6370</option>	
+                    <option value="411005">IGUATU - Pop. - 2253</option>	
+                    <option value="411065">IRACEMA DO OESTE - Pop. - 2251</option>	
+                    <option value="411275">JESUITAS - Pop. - 8330</option>	
+                    <option value="411345">LINDOESTE - Pop. - 4592</option>	
+                    <option value="411670">NOVA AURORA - Pop. - 10299</option>	
+                    <option value="412090">QUEDAS DO IGUACU - Pop. - 34409</option>	
+                    <option value="412382">SANTA LUCIA - Pop. - 3793</option>	
+                    <option value="412402">SANTA TEREZA DO OESTE - Pop. - 10096</option>	
+                    <option value="412785">TRES BARRAS DO PARANA - Pop. - 12038</option>	
+                    <option value="412855">VERA CRUZ DO OESTE - Pop. - 8454</option>	</optgroup>
+                <optgroup label="11ª Campo Mourão">	<option value="410045">ALTAMIRA DO PARANA - Pop. - 1682</option>	
+                    <option value="410170">ARARUNA - Pop. - 14000</option>	
+                    <option value="410250">BARBOSA FERRAZ - Pop. - 11426</option>	
+                    <option value="410300">BOA ESPERANCA - Pop. - 4047</option>	
+                    <option value="410390">CAMPINA DA LAGOA - Pop. - 14043</option>	
+                    <option value="410430">CAMPO MOURAO - Pop. - 95488</option>	
+                    <option value="410655">CORUMBATAI DO SUL - Pop. - 3127</option>	
+                    <option value="410750">ENGENHEIRO BELTRAO - Pop. - 13981</option>	
+                    <option value="410755">FAROL - Pop. - 3041</option>	
+                    <option value="410770">FENIX - Pop. - 4748</option>	
+                    <option value="410860">GOIOERE - Pop. - 28808</option>	
+                    <option value="411080">IRETAMA - Pop. - 10098</option>	
+                    <option value="411220">JANIOPOLIS - Pop. - 5095</option>	
+                    <option value="411295">JURANDA - Pop. - 7292</option>	
+                    <option value="411373">LUIZIANA - Pop. - 7240</option>	
+                    <option value="411400">MAMBORE - Pop. - 13014</option>	
+                    <option value="411610">MOREIRA SALES - Pop. - 12042</option>	
+                    <option value="411680">NOVA CANTU - Pop. - 5061</option>	
+                    <option value="411880">PEABIRU - Pop. - 14007</option>	
+                    <option value="412065">QUARTO CENTENARIO - Pop. - 4465</option>	
+                    <option value="412110">QUINTA DO SOL - Pop. - 4508</option>	
+                    <option value="412135">RANCHO ALEGRE D'OESTE - Pop. - 2628</option>	
+                    <option value="412250">RONCADOR - Pop. - 9645</option>	
+                    <option value="412720">TERRA BOA - Pop. - 17200</option>	
+                    <option value="412800">UBIRATA - Pop. - 20909</option>	</optgroup>
+                <optgroup label="12ª Umuarama">	<option value="412862">ALTO PARAISO - Pop. - 2685</option>	
+                    <option value="410070">ALTO PIQUIRI - Pop. - 9778</option>	
+                    <option value="410050">ALTONIA - Pop. - 22176</option>	
+                    <option value="410337">BRASILANDIA DO SUL - Pop. - 2585</option>	
+                    <option value="410347">CAFEZAL DO SUL - Pop. - 4009</option>	
+                    <option value="410660">CRUZEIRO DO OESTE - Pop. - 20947</option>	
+                    <option value="410725">DOURADINA - Pop. - 8869</option>	
+                    <option value="410752">ESPERANCA NOVA - Pop. - 1665</option>	
+                    <option value="410832">FRANCISCO ALVES - Pop. - 5993</option>	
+                    <option value="410990">ICARAIMA - Pop. - 7786</option>	
+                    <option value="411060">IPORA - Pop. - 13782</option>	
+                    <option value="411155">IVATE - Pop. - 8240</option>	
+                    <option value="411470">MARIA HELENA - Pop. - 5634</option>	
+                    <option value="411510">MARILUZ - Pop. - 10336</option>	
+                    <option value="411720">NOVA OLIMPIA - Pop. - 5826</option>	
+                    <option value="411885">PEROBAL - Pop. - 6160</option>	
+                    <option value="411890">PEROLA - Pop. - 11321</option>	
+                    <option value="412535">SAO JORGE DO PATROCINIO - Pop. - 5586</option>	
+                    <option value="412690">TAPIRA - Pop. - 5495</option>	
+                    <option value="412810">UMUARAMA - Pop. - 112500</option>	
+                    <option value="412880">XAMBRE - Pop. - 5630</option>	</optgroup>
+                <optgroup label="13ª Cianorte">	<option value="410550">CIANORTE - Pop. - 83816</option>	
+                    <option value="410560">CIDADE GAUCHA - Pop. - 12797</option>	
+                    <option value="410910">GUAPOREMA - Pop. - 2241</option>	
+                    <option value="411040">INDIANOPOLIS - Pop. - 4465</option>	
+                    <option value="411240">JAPURA - Pop. - 9500</option>	
+                    <option value="411300">JUSSARA - Pop. - 7041</option>	
+                    <option value="412260">RONDON - Pop. - 9622</option>	
+                    <option value="412555">SAO MANOEL DO PARANA - Pop. - 2163</option>	
+                    <option value="412610">SAO TOME - Pop. - 5750</option>	
+                    <option value="412680">TAPEJARA - Pop. - 16345</option>	
+                    <option value="412790">TUNEIRAS DO OESTE - Pop. - 8533</option>	</optgroup>
+                <optgroup label="14ª Paranavaí">	<option value="410060">ALTO PARANA - Pop. - 14859</option>	
+                    <option value="410090">AMAPORA - Pop. - 6332</option>	
+                    <option value="410670">CRUZEIRO DO SUL - Pop. - 4449</option>	
+                    <option value="410710">DIAMANTE DO NORTE - Pop. - 5030</option>	
+                    <option value="410890">GUAIRACA - Pop. - 6609</option>	
+                    <option value="411030">INAJA - Pop. - 3116</option>	
+                    <option value="411130">ITAUNA DO SUL - Pop. - 2781</option>	
+                    <option value="411260">JARDIM OLINDA - Pop. - 1320</option>	
+                    <option value="411350">LOANDA - Pop. - 23242</option>	
+                    <option value="411500">MARILENA - Pop. - 7084</option>	
+                    <option value="411590">MIRADOR - Pop. - 2196</option>	
+                    <option value="411650">NOVA ALIANCA DO IVAI - Pop. - 1551</option>	
+                    <option value="411710">NOVA LONDRINA - Pop. - 13200</option>	
+                    <option value="411800">PARAISO DO NORTE - Pop. - 14023</option>	
+                    <option value="411830">PARANAPOEMA - Pop. - 3241</option>	
+                    <option value="411840">PARANAVAI - Pop. - 88922</option>	
+                    <option value="411970">PLANALTINA DO PARANA - Pop. - 4272</option>	
+                    <option value="412020">PORTO RICO - Pop. - 2556</option>	
+                    <option value="412100">QUERENCIA DO NORTE - Pop. - 12232</option>	
+                    <option value="412330">SANTA CRUZ DO MONTE CASTELO - Pop. - 7751</option>	
+                    <option value="412370">SANTA ISABEL DO IVAI - Pop. - 8523</option>	
+                    <option value="412395">SANTA MONICA - Pop. - 4017</option>	
+                    <option value="412420">SANTO ANTONIO DO CAIUA - Pop. - 2626</option>	
+                    <option value="412460">SAO CARLOS DO IVAI - Pop. - 6920</option>	
+                    <option value="412490">SAO JOAO DO CAIUA - Pop. - 5837</option>	
+                    <option value="412590">SAO PEDRO DO PARANA - Pop. - 2289</option>	
+                    <option value="412670">TAMBOARA - Pop. - 5158</option>	
+                    <option value="412730">TERRA RICA - Pop. - 16924</option>	</optgroup>
+                <optgroup label="15ª Maringá">	<option value="410115">ANGULO - Pop. - 2930</option>	
+                    <option value="410210">ASTORGA - Pop. - 26209</option>	
+                    <option value="410220">ATALAIA - Pop. - 3881</option>	
+                    <option value="410590">COLORADO - Pop. - 24145</option>	
+                    <option value="410730">DOUTOR CAMARGO - Pop. - 5983</option>	
+                    <option value="410780">FLORAI - Pop. - 4906</option>	
+                    <option value="410790">FLORESTA - Pop. - 6851</option>	
+                    <option value="410810">FLORIDA - Pop. - 2699</option>	
+                    <option value="411000">IGUARACU - Pop. - 4440</option>	
+                    <option value="411090">ITAGUAJE - Pop. - 4446</option>	
+                    <option value="411110">ITAMBE - Pop. - 6109</option>	
+                    <option value="411160">IVATUBA - Pop. - 3279</option>	
+                    <option value="411360">LOBATO - Pop. - 4819</option>	
+                    <option value="411410">MANDAGUACU - Pop. - 23100</option>	
+                    <option value="411420">MANDAGUARI - Pop. - 34515</option>	
+                    <option value="411480">MARIALVA - Pop. - 35804</option>	
+                    <option value="411520">MARINGA - Pop. - 430157</option>	
+                    <option value="411630">MUNHOZ DE MELLO - Pop. - 4009</option>	
+                    <option value="411640">NOSSA SENHORA DAS GRACAS - Pop. - 4008</option>	
+                    <option value="411690">NOVA ESPERANCA - Pop. - 27984</option>	
+                    <option value="411740">OURIZONA - Pop. - 3425</option>	
+                    <option value="411750">PAICANDU - Pop. - 41773</option>	
+                    <option value="411810">PARANACITY - Pop. - 11580</option>	
+                    <option value="412040">PRESIDENTE CASTELO BRANCO - Pop. - 5351</option>	
+                    <option value="412340">SANTA FE - Pop. - 12186</option>	
+                    <option value="412360">SANTA INES - Pop. - 1594</option>	
+                    <option value="412450">SANTO INACIO - Pop. - 5416</option>	
+                    <option value="412530">SAO JORGE DO IVAI - Pop. - 5543</option>	
+                    <option value="412625">SARANDI - Pop. - 97803</option>	
+                    <option value="412830">UNIFLOR - Pop. - 2614</option>	</optgroup>
+                <optgroup label="16ª Apucarana">	<option value="410140">APUCARANA - Pop. - 136234</option>	
+                    <option value="410150">ARAPONGAS - Pop. - 124810</option>	
+                    <option value="410320">BOM SUCESSO - Pop. - 7068</option>	
+                    <option value="410330">BORRAZOPOLIS - Pop. - 6439</option>	
+                    <option value="410350">CALIFORNIA - Pop. - 8606</option>	
+                    <option value="410380">CAMBIRA - Pop. - 7917</option>	
+                    <option value="410760">FAXINAL - Pop. - 17316</option>	
+                    <option value="410870">GRANDES RIOS - Pop. - 5497</option>	
+                    <option value="411210">JANDAIA DO SUL - Pop. - 21230</option>	
+                    <option value="411310">KALORE - Pop. - 4047</option>	
+                    <option value="411490">MARILANDIA DO SUL - Pop. - 8814</option>	
+                    <option value="411550">MARUMBI - Pop. - 4677</option>	
+                    <option value="411575">MAUA DA SERRA - Pop. - 10800</option>	
+                    <option value="411729">NOVO ITACOLOMI - Pop. - 2840</option>	
+                    <option value="412210">RIO BOM - Pop. - 3182</option>	
+                    <option value="412270">SABAUDIA - Pop. - 6891</option>	
+                    <option value="412580">SAO PEDRO DO IVAI - Pop. - 11046</option>	</optgroup>
+                <optgroup label="17ª Londrina">	<option value="410080">ALVORADA DO SUL - Pop. - 11503</option>	
+                    <option value="410190">ASSAI - Pop. - 14954</option>	
+                    <option value="410280">BELA VISTA DO PARAISO - Pop. - 15399</option>	
+                    <option value="410340">CAFEARA - Pop. - 2954</option>	
+                    <option value="410370">CAMBE - Pop. - 107341</option>	
+                    <option value="410510">CENTENARIO DO SUL - Pop. - 10764</option>	
+                    <option value="410800">FLORESTOPOLIS - Pop. - 10453</option>	
+                    <option value="410920">GUARACI - Pop. - 5530</option>	
+                    <option value="410980">IBIPORA - Pop. - 55131</option>	
+                    <option value="411190">JAGUAPITA - Pop. - 13742</option>	
+                    <option value="411270">JATAIZINHO - Pop. - 12638</option>	
+                    <option value="411370">LONDRINA - Pop. - 575377</option>	
+                    <option value="411380">LUPIONOPOLIS - Pop. - 4945</option>	
+                    <option value="411600">MIRASELVA - Pop. - 1796</option>	
+                    <option value="411965">PITANGUEIRAS - Pop. - 3262</option>	
+                    <option value="412000">PORECATU - Pop. - 12748</option>	
+                    <option value="412033">PRADO FERREIRA - Pop. - 3780</option>	
+                    <option value="412050">PRIMEIRO DE MAIO - Pop. - 11130</option>	
+                    <option value="412240">ROLANDIA - Pop. - 67383</option>	
+                    <option value="412650">SERTANOPOLIS - Pop. - 16413</option>	
+                    <option value="412667">TAMARANA - Pop. - 15040</option>	</optgroup>
+                <optgroup label="18ª Cornélio Procópio">	<option value="410010">ABATIA - Pop. - 7408</option>	
+                    <option value="410110">ANDIRA - Pop. - 19926</option>	
+                    <option value="410240">BANDEIRANTES - Pop. - 31211</option>	
+                    <option value="410600">CONGONHINHAS - Pop. - 8857</option>	
+                    <option value="410640">CORNELIO PROCOPIO - Pop. - 47842</option>	
+                    <option value="411100">ITAMBARACA - Pop. - 6549</option>	
+                    <option value="411340">LEOPOLIS - Pop. - 3925</option>	
+                    <option value="411660">NOVA AMERICA DA COLINA - Pop. - 3434</option>	
+                    <option value="411700">NOVA FATIMA - Pop. - 8136</option>	
+                    <option value="411721">NOVA SANTA BARBARA - Pop. - 4277</option>	
+                    <option value="412130">RANCHO ALEGRE - Pop. - 3784</option>	
+                    <option value="412190">RIBEIRAO DO PINHAL - Pop. - 12948</option>	
+                    <option value="412310">SANTA AMELIA - Pop. - 3266</option>	
+                    <option value="412320">SANTA CECILIA DO PAVAO - Pop. - 3293</option>	
+                    <option value="412390">SANTA MARIANA - Pop. - 11622</option>	
+                    <option value="412430">SANTO ANTONIO DO PARAISO - Pop. - 2068</option>	
+                    <option value="412470">SAO JERONIMO DA SERRA - Pop. - 11128</option>	
+                    <option value="412600">SAO SEBASTIAO DA AMOREIRA - Pop. - 8859</option>	
+                    <option value="412620">SAPOPEMA - Pop. - 6722</option>	
+                    <option value="412640">SERTANEJA - Pop. - 5216</option>	
+                    <option value="412840">URAI - Pop. - 11273</option>	</optgroup>
+                <optgroup label="19ª Jacarezinho">	<option value="410270">BARRA DO JACARE - Pop. - 2781</option>	
+                    <option value="410360">CAMBARA - Pop. - 25466</option>	
+                    <option value="410470">CARLOPOLIS - Pop. - 14356</option>	
+                    <option value="410610">CONSELHEIRO MAIRINCK - Pop. - 3876</option>	
+                    <option value="410775">FIGUEIRA - Pop. - 7696</option>	
+                    <option value="410900">GUAPIRAMA - Pop. - 3784</option>	
+                    <option value="410970">IBAITI - Pop. - 31644</option>	
+                    <option value="411170">JABOTI - Pop. - 5303</option>	
+                    <option value="411180">JACAREZINHO - Pop. - 39322</option>	
+                    <option value="411230">JAPIRA - Pop. - 4930</option>	
+                    <option value="411280">JOAQUIM TAVORA - Pop. - 12009</option>	
+                    <option value="411290">JUNDIAI DO SUL - Pop. - 3269</option>	
+                    <option value="411920">PINHALAO - Pop. - 6324</option>	
+                    <option value="412070">QUATIGUA - Pop. - 7477</option>	
+                    <option value="412180">RIBEIRAO CLARO - Pop. - 10645</option>	
+                    <option value="412290">SALTO DO ITARARE - Pop. - 4898</option>	
+                    <option value="412400">SANTANA DO ITARARE - Pop. - 4954</option>	
+                    <option value="412410">SANTO ANTONIO DA PLATINA - Pop. - 46251</option>	
+                    <option value="412540">SAO JOSE DA BOA VISTA - Pop. - 6160</option>	
+                    <option value="412660">SIQUEIRA CAMPOS - Pop. - 21249</option>	
+                    <option value="412780">TOMAZINA - Pop. - 7807</option>	
+                    <option value="412850">WENCESLAU BRAZ - Pop. - 19386</option>	</optgroup>
+                <optgroup label="20ª Toledo">	<option value="410200">ASSIS CHATEAUBRIAND - Pop. - 33340</option>	
+                    <option value="410715">DIAMANTE D'OESTE - Pop. - 5266</option>	
+                    <option value="410753">ENTRE RIOS DO OESTE - Pop. - 4596</option>	
+                    <option value="410880">GUAIRA - Pop. - 33310</option>	
+                    <option value="411460">MARECHAL CANDIDO RONDON - Pop. - 53495</option>	
+                    <option value="411535">MARIPA - Pop. - 5582</option>	
+                    <option value="411585">MERCEDES - Pop. - 5577</option>	
+                    <option value="411722">NOVA SANTA ROSA - Pop. - 8266</option>	
+                    <option value="411745">OURO VERDE DO OESTE - Pop. - 6016</option>	
+                    <option value="411790">PALOTINA - Pop. - 32121</option>	
+                    <option value="411845">PATO BRAGADO - Pop. - 5684</option>	
+                    <option value="412085">QUATRO PONTES - Pop. - 4029</option>	
+                    <option value="412350">SANTA HELENA - Pop. - 26767</option>	
+                    <option value="412545">SAO JOSE DAS PALMEIRAS - Pop. - 3627</option>	
+                    <option value="412575">SAO PEDRO DO IGUACU - Pop. - 5820</option>	
+                    <option value="412740">TERRA ROXA - Pop. - 17522</option>	
+                    <option value="412770">TOLEDO - Pop. - 142645</option>	
+                    <option value="412795">TUPASSI - Pop. - 8109</option>	</optgroup>
+                <optgroup label="21ª Telêmaco Borba">	<option value="410700">CURIUVA - Pop. - 15196</option>	
+                    <option value="411007">IMBAU - Pop. - 13282</option>	
+                    <option value="411730">ORTIGUEIRA - Pop. - 21960</option>	
+                    <option value="412170">RESERVA - Pop. - 26825</option>	
+                    <option value="412710">TELEMACO BORBA - Pop. - 79792</option>	
+                    <option value="412750">TIBAGI - Pop. - 20607</option>	
+                    <option value="412853">VENTANIA - Pop. - 12088</option>	</optgroup>
+                <optgroup label="22ª Ivaiporã">	<option value="410165">ARAPUA - Pop. - 3009</option>	
+                    <option value="410185">ARIRANHA DO IVAI - Pop. - 2066</option>	
+                    <option value="410440">CANDIDO DE ABREU - Pop. - 14809</option>	
+                    <option value="410685">CRUZMALTINA - Pop. - 2921</option>	
+                    <option value="410855">GODOY MOREIRA - Pop. - 2898</option>	
+                    <option value="411150">IVAIPORA - Pop. - 31935</option>	
+                    <option value="411250">JARDIM ALEGRE - Pop. - 11196</option>	
+                    <option value="411342">LIDIANOPOLIS - Pop. - 3231</option>	
+                    <option value="411375">LUNARDELLI - Pop. - 4744</option>	
+                    <option value="411450">MANOEL RIBAS - Pop. - 13510</option>	
+                    <option value="411573">MATO RICO - Pop. - 3206</option>	
+                    <option value="411727">NOVA TEBAS - Pop. - 5448</option>	
+                    <option value="412217">RIO BRANCO DO IVAI - Pop. - 4109</option>	
+                    <option value="412265">ROSARIO DO IVAI - Pop. - 4689</option>	
+                    <option value="412385">SANTA MARIA DO OESTE - Pop. - 9410</option>	
+                    <option value="412500">SAO JOAO DO IVAI - Pop. - 10056</option>	</optgroup>
+                
+            </select>
+        </p>
+        <input type="submit" value="Enviar">
+    </form>
+
+    <img src="{{ figura }}" alt="grafico"/>
+
+</body>
+</html>
