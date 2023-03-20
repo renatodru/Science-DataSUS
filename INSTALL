@@ -1,1 +1,5 @@
-docker-compose -f .\docker-compose.yml up -d
+docker-compose -f .\docker-compose_pgsql.yml up -d
+
+docker build Dockerfile_app -t app_Science-DataSUS:latest
+
+docker-compose -f .\docker-compose_app.yml up -d
