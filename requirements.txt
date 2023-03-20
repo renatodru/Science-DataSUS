@@ -2,3 +2,5 @@ Flask~=2.2.2
 psycopg
 pandas
 numpy
+matplotlib
+simpledbf
